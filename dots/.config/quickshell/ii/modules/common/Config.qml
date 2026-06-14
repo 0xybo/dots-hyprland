@@ -497,6 +497,7 @@ Singleton {
 
             property JsonObject sidebar: JsonObject {
                 property bool keepRightSidebarLoaded: true
+                property bool keepSidebarRightMiniLoaded: true
                 property JsonObject translator: JsonObject {
                     property bool enable: false
                     property int delay: 300 // Delay before sending request. Reduces (potential) rate limits and lag.
@@ -522,6 +523,7 @@ Singleton {
                     property bool visualize: false
                     property bool clicklessCornerEnd: true
                     property int clicklessCornerVerticalOffset: 1
+                    property string bottomRightTarget: "full" // "full" or "mini"
                 }
 
                 property JsonObject quickToggles: JsonObject {

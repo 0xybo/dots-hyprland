@@ -14,9 +14,16 @@ Rectangle {
     color: Appearance.colors.colLayer1
     clip: true
     implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : 350
-    property int selectedTab: Persistent.states.sidebar.bottomGroup.tab
+    property string persistentStatePrefix: "sidebar.bottomGroup"
+    property int selectedTab: _state.tab
     property int previousIndex: -1
-    property bool collapsed: Persistent.states.sidebar.bottomGroup.collapsed
+    property bool collapsed: _state.collapsed
+    readonly property var _state: {
+        const parts = persistentStatePrefix.split(".");
+        let obj = Persistent.states;
+        for (let i = 0; i < parts.length; ++i) obj = obj[parts[i]];
+        return obj;
+    }
     property var tabs: [
         {
             "type": "calendar",
@@ -47,7 +54,7 @@ Rectangle {
     }
 
     function setCollapsed(state) {
-        Persistent.states.sidebar.bottomGroup.collapsed = state;
+        _state.collapsed = state;
         if (collapsed) {
             bottomWidgetGroupRow.opacity = 0;
         } else {
@@ -166,7 +173,7 @@ Rectangle {
                         buttonIcon: modelData.icon
                         onPressed: {
                             root.selectedTab = index;
-                            Persistent.states.sidebar.bottomGroup.tab = index;
+                            root._state.tab = index;
                         }
                     }
                 }

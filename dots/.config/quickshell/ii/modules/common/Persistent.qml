@@ -72,6 +72,10 @@ Singleton {
                     property bool collapsed: false
                     property int tab: 0
                 }
+                property JsonObject bottomGroupMini: JsonObject {
+                    property bool collapsed: true
+                    property int tab: 0
+                }
             }
 
             property JsonObject booru: JsonObject {

@@ -16,7 +16,12 @@ Scope {
         [RoundCorner.CornerEnum.TopLeft]: () => GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen,
         [RoundCorner.CornerEnum.BottomLeft]: () => GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen,
         [RoundCorner.CornerEnum.TopRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen,
-        [RoundCorner.CornerEnum.BottomRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
+        [RoundCorner.CornerEnum.BottomRight]: () => {
+            if (Config.options.sidebar.cornerOpen.bottomRightTarget === "mini")
+                GlobalStates.sidebarRightMiniOpen = !GlobalStates.sidebarRightMiniOpen;
+            else
+                GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+        }
     })
 
     component CornerPanelWindow: PanelWindow {
