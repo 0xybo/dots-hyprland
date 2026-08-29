@@ -72,10 +72,11 @@ Singleton {
                     property bool collapsed: false
                     property int tab: 0
                 }
-                property JsonObject bottomGroupMini: JsonObject {
+                property JsonObject bottomGroupSecondary: JsonObject {
                     property bool collapsed: true
                     property int tab: 0
                 }
+                property real secondarySplitRatio: 0.5
             }
 
             property JsonObject booru: JsonObject {

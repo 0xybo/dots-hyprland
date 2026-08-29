@@ -199,14 +199,26 @@ Item { // Bar content region
         implicitWidth: rightSectionRowLayout.implicitWidth
         implicitHeight: Appearance.sizes.baseBarHeight
 
-        onScrollDown: Audio.decrementVolume();
-        onScrollUp: Audio.incrementVolume();
-        onMovedAway: GlobalStates.osdVolumeOpen = false;
-        onPressed: event => {
-            if (event.button === Qt.LeftButton) {
-                GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
-            }
-        }
+        onScrollDown: Audio.decrementVolume()
+        onScrollUp: Audio.incrementVolume()
+        onMovedAway: GlobalStates.osdVolumeOpen = false
+        // onPressed: event => {
+        //     if (event.button === Qt.LeftButton) {
+        //         if (GlobalStates.sidebarRightOpen)
+        //             GlobalStates.sidebarRightOpen = false;
+        //         else {
+        //             GlobalStates.sidebarRightOpen = true;
+        //             GlobalStates.sidebarSecondaryOpen = false;
+        //         }
+        //     } else {
+        //         if (GlobalStates.sidebarSecondaryOpen)
+        //             GlobalStates.sidebarSecondaryOpen = false;
+        //         else {
+        //             GlobalStates.sidebarSecondaryOpen = true;
+        //             GlobalStates.sidebarRightOpen = false;
+        //         }
+        //     }
+        // }
 
         // Visual content
         ScrollHint {
@@ -248,8 +260,22 @@ Item { // Bar content region
                     animation: Appearance.animation.elementMoveFast.colorAnimation.createObject(this)
                 }
 
-                onPressed: {
-                    GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+                    onPressed: {
+                        GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+                        GlobalStates.sidebarSecondaryOpen = false;
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.RightButton
+                    onPressed: {
+                        GlobalStates.sidebarSecondaryOpen = !GlobalStates.sidebarSecondaryOpen;
+                        GlobalStates.sidebarRightOpen = false;
+                    }
                 }
 
                 RowLayout {

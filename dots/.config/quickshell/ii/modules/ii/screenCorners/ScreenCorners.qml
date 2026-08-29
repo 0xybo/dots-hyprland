@@ -17,8 +17,8 @@ Scope {
         [RoundCorner.CornerEnum.BottomLeft]: () => GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen,
         [RoundCorner.CornerEnum.TopRight]: () => GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen,
         [RoundCorner.CornerEnum.BottomRight]: () => {
-            if (Config.options.sidebar.cornerOpen.bottomRightTarget === "mini")
-                GlobalStates.sidebarRightMiniOpen = !GlobalStates.sidebarRightMiniOpen;
+            if (Config.options.sidebar.cornerOpen.bottomRightTarget === "secondary")
+                GlobalStates.sidebarSecondaryOpen = !GlobalStates.sidebarSecondaryOpen;
             else
                 GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
         }

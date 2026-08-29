@@ -13,17 +13,9 @@ Rectangle {
     radius: Appearance.rounding.normal
     color: Appearance.colors.colLayer1
     clip: true
-    implicitHeight: collapsed ? collapsedBottomWidgetGroupRow.implicitHeight : 350
-    property string persistentStatePrefix: "sidebar.bottomGroup"
-    property int selectedTab: _state.tab
+    implicitHeight: 350
+    property int selectedTab: Persistent.states.sidebar.bottomGroup.tab
     property int previousIndex: -1
-    property bool collapsed: _state.collapsed
-    readonly property var _state: {
-        const parts = persistentStatePrefix.split(".");
-        let obj = Persistent.states;
-        for (let i = 0; i < parts.length; ++i) obj = obj[parts[i]];
-        return obj;
-    }
     property var tabs: [
         {
             "type": "calendar",
@@ -31,12 +23,12 @@ Rectangle {
             "icon": "calendar_month",
             "widget": "calendar/CalendarWidget.qml"
         },
-        {
-            "type": "todo",
-            "name": Translation.tr("To Do"),
-            "icon": "done_outline",
-            "widget": "todo/TodoWidget.qml"
-        },
+        // {
+        //     "type": "todo",
+        //     "name": Translation.tr("To Do"),
+        //     "icon": "done_outline",
+        //     "widget": "todo/TodoWidget.qml"
+        // },
         {
             "type": "timer",
             "name": Translation.tr("Timer"),
@@ -44,36 +36,6 @@ Rectangle {
             "widget": "pomodoro/PomodoroWidget.qml"
         },
     ]
-
-    Behavior on implicitHeight {
-        NumberAnimation {
-            duration: Appearance.animation.elementMove.duration
-            easing.type: Appearance.animation.elementMove.type
-            easing.bezierCurve: Appearance.animation.elementMove.bezierCurve
-        }
-    }
-
-    function setCollapsed(state) {
-        _state.collapsed = state;
-        if (collapsed) {
-            bottomWidgetGroupRow.opacity = 0;
-        } else {
-            collapsedBottomWidgetGroupRow.opacity = 0;
-        }
-        collapseCleanFadeTimer.start();
-    }
-
-    Timer {
-        id: collapseCleanFadeTimer
-        interval: Appearance.animation.elementMove.duration / 2
-        repeat: false
-        onTriggered: {
-            if (collapsed)
-                collapsedBottomWidgetGroupRow.opacity = 1;
-            else
-                bottomWidgetGroupRow.opacity = 1;
-        }
-    }
 
     Keys.onPressed: event => {
         if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp) && event.modifiers === Qt.ControlModifier) {
@@ -86,65 +48,9 @@ Rectangle {
         }
     }
 
-    // The thing when collapsed
-    RowLayout {
-        id: collapsedBottomWidgetGroupRow
-        opacity: collapsed ? 1 : 0
-        visible: opacity > 0
-        Behavior on opacity {
-            NumberAnimation {
-                id: collapsedBottomWidgetGroupRowFade
-                duration: Appearance.animation.elementMove.duration / 2
-                easing.type: Appearance.animation.elementMove.type
-                easing.bezierCurve: Appearance.animation.elementMove.bezierCurve
-            }
-        }
-
-        spacing: 15
-
-        CalendarHeaderButton {
-            Layout.margins: 10
-            Layout.rightMargin: 0
-            forceCircle: true
-            downAction: () => {
-                root.setCollapsed(false);
-            }
-            contentItem: MaterialSymbol {
-                text: "keyboard_arrow_up"
-                iconSize: Appearance.font.pixelSize.larger
-                horizontalAlignment: Text.AlignHCenter
-                color: Appearance.colors.colOnLayer1
-            }
-        }
-
-        StyledText {
-            property int remainingTasks: Todo.list.filter(task => !task.done).length
-            Layout.margins: 10
-            Layout.leftMargin: 0
-            // text: `${DateTime.collapsedCalendarFormat}   •   ${remainingTasks} task${remainingTasks > 1 ? "s" : ""}`
-            text: Translation.tr("%1   •   %2 tasks").arg(DateTime.collapsedCalendarFormat).arg(remainingTasks)
-            font.pixelSize: Appearance.font.pixelSize.large
-            color: Appearance.colors.colOnLayer1
-        }
-    }
-
-    // The thing when expanded
     RowLayout {
         id: bottomWidgetGroupRow
-
-        opacity: collapsed ? 0 : 1
-        visible: opacity > 0
-        Behavior on opacity {
-            NumberAnimation {
-                id: bottomWidgetGroupRowFade
-                duration: Appearance.animation.elementMove.duration / 2
-                easing.type: Appearance.animation.elementMove.type
-                easing.bezierCurve: Appearance.animation.elementMove.bezierCurve
-            }
-        }
-
         anchors.fill: parent
-        // implicitHeight: tabStack.implicitHeight
         spacing: 20
 
         // Navigation rail
@@ -154,7 +60,6 @@ Rectangle {
             Layout.leftMargin: 10
             Layout.topMargin: 10
             implicitWidth: tabBar.implicitWidth
-            // Navigation rail buttons
             NavigationRailTabArray {
                 id: tabBar
                 anchors.verticalCenter: parent.verticalCenter
@@ -173,24 +78,9 @@ Rectangle {
                         buttonIcon: modelData.icon
                         onPressed: {
                             root.selectedTab = index;
-                            root._state.tab = index;
+                            Persistent.states.sidebar.bottomGroup.tab = index;
                         }
                     }
-                }
-            }
-            // Collapse button
-            CalendarHeaderButton {
-                anchors.left: parent.left
-                anchors.top: parent.top
-                forceCircle: true
-                downAction: () => {
-                    root.setCollapsed(true);
-                }
-                contentItem: MaterialSymbol {
-                    text: "keyboard_arrow_down"
-                    iconSize: Appearance.font.pixelSize.larger
-                    horizontalAlignment: Text.AlignHCenter
-                    color: Appearance.colors.colOnLayer1
                 }
             }
         }
@@ -199,7 +89,6 @@ Rectangle {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            // implicitHeight: tabStack.implicitHeight
 
             Loader {
                 id: tabStack
@@ -257,7 +146,7 @@ Rectangle {
             target: tabStack
             property: "source"
             value: root.tabs[root.selectedTab].widget
-        } // The source change happens here
+        }
         ParallelAnimation {
             PropertyAnimation {
                 target: tabStack.anchors

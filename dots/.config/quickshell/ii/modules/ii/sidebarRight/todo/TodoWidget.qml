@@ -10,8 +10,6 @@ Item {
     property var tabButtonList: [{"icon": "checklist", "name": Translation.tr("Unfinished")}, {"name": Translation.tr("Done"), "icon": "check_circle"}]
     property bool showAddDialog: false
     property int dialogMargins: 20
-    property int fabSize: 48
-    property int fabMargins: 14
 
     Keys.onPressed: (event) => {
         if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp) && event.modifiers === Qt.NoModifier) {
@@ -38,6 +36,66 @@ Item {
         anchors.fill: parent
         spacing: 0
 
+        // Toolbar: Add + Clear completed
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.margins: 8
+            spacing: 6
+
+            RippleButton {
+                implicitHeight: 32
+                implicitWidth: 32
+                buttonRadius: Appearance.rounding.small
+                colBackground: Appearance.colors.colPrimaryContainer
+                colBackgroundHover: Appearance.colors.colPrimaryContainerHover
+                colRipple: Appearance.colors.colPrimaryContainerActive
+                onClicked: root.showAddDialog = true
+                contentItem: MaterialSymbol {
+                    anchors.centerIn: parent
+                    text: "add"
+                    iconSize: Appearance.font.pixelSize.larger
+                    color: Appearance.colors.colOnPrimaryContainer
+                }
+                StyledToolTip {
+                    text: Translation.tr("Add task")
+                }
+            }
+
+            StyledText {
+                Layout.alignment: Qt.AlignLeft
+                font.pixelSize: Appearance.font.pixelSize.large
+                color: Appearance.colors.colOnLayer1
+                text: Translation.tr("To Do")
+            }
+
+            Item { Layout.fillWidth: true }
+
+            RippleButton {
+                id: clearCompletedBtn
+                implicitHeight: 32
+                implicitWidth: 32
+                buttonRadius: Appearance.rounding.small
+                colBackground: Appearance.colors.colErrorContainer
+                colBackgroundHover: Appearance.colors.colErrorContainerHover
+                colRipple: Appearance.colors.colErrorContainerActive
+                visible: Todo.list.filter(t => t.done).length > 0
+                onClicked: {
+                    for (let i = Todo.list.length - 1; i >= 0; i--) {
+                        if (Todo.list[i].done) Todo.deleteItem(i);
+                    }
+                }
+                contentItem: MaterialSymbol {
+                    anchors.centerIn: parent
+                    text: "clear_all"
+                    iconSize: Appearance.font.pixelSize.larger
+                    color: Appearance.colors.colOnErrorContainer
+                }
+                StyledToolTip {
+                    text: Translation.tr("Clear completed")
+                }
+            }
+        }
+
         SecondaryTabBar {
             id: tabBar
             currentIndex: swipeView.currentIndex
@@ -62,7 +120,6 @@ Item {
 
             // To Do tab
             TaskList {
-                listBottomPadding: root.fabSize + root.fabMargins * 2
                 emptyPlaceholderIcon: "check_circle"
                 emptyPlaceholderText: Translation.tr("Nothing here!")
                 taskList: Todo.list
@@ -70,7 +127,6 @@ Item {
                     .filter(function(item) { return !item.done; })
             }
             TaskList {
-                listBottomPadding: root.fabSize + root.fabMargins * 2
                 emptyPlaceholderIcon: "checklist"
                 emptyPlaceholderText: Translation.tr("Finished tasks will go here")
                 taskList: Todo.list
@@ -79,23 +135,6 @@ Item {
             }
 
         }
-    }
-
-    // + FAB
-    StyledRectangularShadow {
-        target: fabButton
-        radius: fabButton.buttonRadius
-        blur: 0.6 * Appearance.sizes.elevationMargin
-    }
-    FloatingActionButton {
-        id: fabButton
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.rightMargin: root.fabMargins
-        anchors.bottomMargin: root.fabMargins
-
-        onClicked: root.showAddDialog = true
-        iconText: "add"
     }
 
     Item {
@@ -115,7 +154,6 @@ Item {
         onVisibleChanged: {
             if (!visible) {
                 todoInput.text = ""
-                fabButton.focus = true
             }
         }
 

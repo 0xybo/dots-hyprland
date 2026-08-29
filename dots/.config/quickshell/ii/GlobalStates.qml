@@ -13,7 +13,7 @@ Singleton {
     property bool crosshairOpen: false
     property bool sidebarLeftOpen: false
     property bool sidebarRightOpen: false
-    property bool sidebarRightMiniOpen: false
+    property bool sidebarSecondaryOpen: false
     property bool mediaControlsOpen: false
     property bool osdBrightnessOpen: false
     property bool osdVolumeOpen: false
@@ -32,15 +32,8 @@ Singleton {
     property bool wallpaperSelectorOpen: false
     property bool workspaceShowNumbers: false
 
-    onSidebarRightOpenChanged: {
-        if (GlobalStates.sidebarRightOpen) {
-            Notifications.timeoutAll();
-            Notifications.markAllRead();
-        }
-    }
-
-    onSidebarRightMiniOpenChanged: {
-        if (GlobalStates.sidebarRightMiniOpen) {
+    onSidebarSecondaryOpenChanged: {
+        if (GlobalStates.sidebarSecondaryOpen) {
             Notifications.timeoutAll();
             Notifications.markAllRead();
         }

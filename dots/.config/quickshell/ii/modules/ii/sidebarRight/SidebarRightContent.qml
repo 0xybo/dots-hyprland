@@ -96,15 +96,9 @@ Item {
                 }
             }
 
-            CenterWidgetGroup {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-
             BottomWidgetGroup {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.fillHeight: false
+                Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
             }

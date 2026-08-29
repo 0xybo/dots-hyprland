@@ -28,8 +28,9 @@ hl.bind("SUPER + ALT + A", hl.dsp.global("quickshell:sidebarLeftToggleDetach"))
 hl.bind("SUPER + B", hl.dsp.global("quickshell:sidebarLeftToggle"))
 hl.bind("SUPER + O", hl.dsp.global("quickshell:sidebarLeftToggle"))
 hl.bind("SUPER + N", hl.dsp.global("quickshell:sidebarRightToggle"), { description = "Shell: Toggle right sidebar" })
-hl.bind("SUPER + SHIFT + N", hl.dsp.global("quickshell:sidebarRightMiniToggle"), { description = "Shell: Toggle mini right sidebar" })
-hl.bind("SUPER + Slash", hl.dsp.global("quickshell:cheatsheetToggle"), { description = "Shell: Toggle cheatsheet" })
+hl.bind("SUPER + SHIFT + N", hl.dsp.global("quickshell:sidebarSecondaryToggle"),
+    { description = "Shell: Toggle secondary sidebar" })
+hl.bind("SUPER + Colon", hl.dsp.global("quickshell:cheatsheetToggle"), { description = "Shell: Toggle cheatsheet" })
 hl.bind("SUPER + K", hl.dsp.global("quickshell:oskToggle"), { description = "Shell: Toggle on-screen keyboard" })
 hl.bind("SUPER + M", hl.dsp.global("quickshell:mediaControlsToggle"), { description = "Shell: Toggle media controls" })
 hl.bind("SUPER + G", hl.dsp.global("quickshell:overlayToggle"), { description = "Shell: Toggle widget overlay" })
@@ -118,7 +119,7 @@ local function zoomfunction(value)
         hl.config({ cursor = { zoom_factor = zoomvalue + value } })
     end
 end
-hl.bind("SUPER + Minus", function() zoomfunction(-0.3) end, { repeating = true, description = "Screen: Zoom out" })
+hl.bind("SUPER + parenright", function() zoomfunction(-0.3) end, { repeating = true, description = "Screen: Zoom out" })
 hl.bind("SUPER + Equal", function() zoomfunction(0.3) end, { repeating = true, description = "Screen: Zoom in" })
 
 --# Zoom with keypad
@@ -233,8 +234,8 @@ for i = 1, 2 do
     hl.bind("SUPER + SHIFT + Page_" .. keydirs[i], hl.dsp.window.move({ workspace = prefix[i] .. "1" }), {description = "Window: Send to workspace " .. descdir[i]})
 end
 for i = 1, 4 do
-    local key = { "SUPER + ALT + Page_", "CTRL + SUPER + SHIFT + " }
-    local keycombos = { key[1] .. "down", key[1] .. "up", key[2] .. "Right", key[2] .. "Left" }
+    local key = { "SUPER + ALT + ", "CTRL + SUPER + SHIFT + " }
+    local keycombos = { key[2] .. "Down", key[2] .. "Up", key[1] .. "Right", key[1] .. "Left" }
     local prefix = { "r+", "r-", "r+", "r-" }
     hl.bind(keycombos[i], hl.dsp.window.move({ workspace = prefix[i] .. "1" })) -- # [hidden]
 end

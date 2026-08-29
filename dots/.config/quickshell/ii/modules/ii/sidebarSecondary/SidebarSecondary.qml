@@ -13,16 +13,16 @@ Scope {
 
     PanelWindow {
         id: panelWindow
-        visible: GlobalStates.sidebarRightMiniOpen
+        visible: GlobalStates.sidebarSecondaryOpen
 
         function hide() {
-            GlobalStates.sidebarRightMiniOpen = false;
+            GlobalStates.sidebarSecondaryOpen = false;
         }
 
         exclusiveZone: 0
         implicitWidth: sidebarWidth
-        WlrLayershell.namespace: "quickshell:sidebarRightMini"
-        WlrLayershell.keyboardFocus: GlobalStates.sidebarRightMiniOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.namespace: "quickshell:sidebarSecondary"
+        WlrLayershell.keyboardFocus: GlobalStates.sidebarSecondaryOpen ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
         color: "transparent"
 
         anchors {
@@ -47,7 +47,7 @@ Scope {
 
         Loader {
             id: sidebarContentLoader
-            active: GlobalStates.sidebarRightMiniOpen || Config?.options.sidebar.keepSidebarRightMiniLoaded
+            active: GlobalStates.sidebarSecondaryOpen || Config?.options.sidebar.keepSidebarSecondaryLoaded
             anchors {
                 fill: parent
                 margins: Appearance.sizes.hyprlandGapsOut
@@ -56,55 +56,62 @@ Scope {
             width: sidebarWidth - Appearance.sizes.hyprlandGapsOut - Appearance.sizes.elevationMargin
             height: parent.height - Appearance.sizes.hyprlandGapsOut * 2
 
-            focus: GlobalStates.sidebarRightMiniOpen
+            focus: GlobalStates.sidebarSecondaryOpen
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_Escape) {
                     panelWindow.hide();
                 }
             }
 
-            sourceComponent: SidebarRightMiniContent {}
+            sourceComponent: SidebarSecondaryContent {}
         }
     }
 
     IpcHandler {
-        target: "sidebarRightMini"
+        target: "sidebarSecondary"
 
         function toggle(): void {
-            GlobalStates.sidebarRightMiniOpen = !GlobalStates.sidebarRightMiniOpen;
+            if (GlobalStates.sidebarSecondaryOpen) close();
+            else open();
         }
 
         function close(): void {
-            GlobalStates.sidebarRightMiniOpen = false;
+            GlobalStates.sidebarSecondaryOpen = false;
         }
 
         function open(): void {
-            GlobalStates.sidebarRightMiniOpen = true;
+            GlobalStates.sidebarSecondaryOpen = true;
+            GlobalStates.SidebarRightOpen = false;
         }
     }
 
     GlobalShortcut {
-        name: "sidebarRightMiniToggle"
-        description: "Toggles mini right sidebar on press"
+        name: "sidebarSecondaryToggle"
+        description: "Toggles secondary sidebar on press"
 
         onPressed: {
-            GlobalStates.sidebarRightMiniOpen = !GlobalStates.sidebarRightMiniOpen;
+            if (GlobalStates.sidebarSecondaryOpen) GlobalStates.sidebarSecondaryOpen = false;
+            else {
+                GlobalStates.sidebarSecondaryOpen = true;
+                GlobalStates.sidebarRightOpen = false;
+            }
         }
     }
     GlobalShortcut {
-        name: "sidebarRightMiniOpen"
-        description: "Opens mini right sidebar on press"
+        name: "sidebarSecondaryOpen"
+        description: "Opens secondary sidebar on press"
 
         onPressed: {
-            GlobalStates.sidebarRightMiniOpen = true;
+            GlobalStates.sidebarSecondaryOpen = true;
+            GlobalStates.sidebarRightOpen = false;
         }
     }
     GlobalShortcut {
-        name: "sidebarRightMiniClose"
-        description: "Closes mini right sidebar on press"
+        name: "sidebarSecondaryClose"
+        description: "Closes secondary sidebar on press"
 
         onPressed: {
-            GlobalStates.sidebarRightMiniOpen = false;
+            GlobalStates.sidebarSecondaryOpen = false;
         }
     }
 }

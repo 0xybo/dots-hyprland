@@ -1,0 +1,11 @@
+{
+    "qt-qml.qmlls.useQmlImportPathEnvVar": true,
+    "qt-qml.qmlls.additionalImportPaths": [
+        "${workspaceFolder}",
+        "/run/user/1000/quickshell/vfs/8f52f7e9d508d5a98954aa9c580ff404"
+    ],
+    "qt-qml.qmlls.enabled": true,
+    "qt-qml.qmlls.useNoCMakeCalls": true,
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": false
+}

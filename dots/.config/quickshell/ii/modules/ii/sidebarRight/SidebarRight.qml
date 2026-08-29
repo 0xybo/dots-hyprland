@@ -71,7 +71,8 @@ Scope {
         target: "sidebarRight"
 
         function toggle(): void {
-            GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+            if (GlobalStates.sidebarRightOpen) close();
+            else open();
         }
 
         function close(): void {
@@ -80,6 +81,7 @@ Scope {
 
         function open(): void {
             GlobalStates.sidebarRightOpen = true;
+            GlobalStates.sidebarSecondaryOpen = false;
         }
     }
 
@@ -88,7 +90,11 @@ Scope {
         description: "Toggles right sidebar on press"
 
         onPressed: {
-            GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen;
+            if (GlobalStates.sidebarRightOpen) GlobalStates.sidebarRightOpen = false;
+            else {
+                GlobalStates.sidebarRightOpen = true;
+                GlobalStates.sidebarSecondaryOpen = false;
+            }
         }
     }
     GlobalShortcut {
@@ -97,6 +103,7 @@ Scope {
 
         onPressed: {
             GlobalStates.sidebarRightOpen = true;
+            GlobalStates.sidebarSecondaryOpen = false;
         }
     }
     GlobalShortcut {
